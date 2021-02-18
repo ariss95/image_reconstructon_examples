@@ -6,7 +6,7 @@ class first_RNN(nn.Module):
     def __init__(self, input):
         super(first_RNN, self).__init__()
         #TODO add layers
-        self.device = torch.device('cpu')
+        self.device = torch.device('cuda')
         self.original_input = input #add size
         self.compressed_input = int(self.original_input/4) #from 64*64 to 32*32
         self.compression = nn.Linear(self.original_input, self.compressed_input).to(device=self.device)
