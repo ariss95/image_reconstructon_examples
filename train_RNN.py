@@ -4,17 +4,17 @@ import torch
 import torch.nn as nn
 import torchvision
 import matplotlib.pyplot as plt
-import time
-path = 'movingMnist/mnist_test_seq.npy'
+import plot_utils
+path = '/home/aris/Desktop/anomaly_detection/movingMnist/mnist_test_seq_16.npy'
 data_loader = dl.Moving_MNIST_Loader(path=path, time_steps=20, load_only=-1,
                                       flatten=True, scale=False)
-device = torch.device('cuda')
-model = model_RNN.first_RNN(4096).to(device)
+device = torch.device('cpu')
+model = model_RNN.first_RNN(256).to(device)
 learning_rate = 0.001
-epochs = 100
+epochs = 60
 batch_size = 64
 training_samples = 8000
-#print(data_loader.data[0].shape)
+test_samples = 1000
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
 
@@ -30,31 +30,40 @@ def fit(model, dataloader):
 		for j in range (iterations):
 			#print(j)
 			data = dataloader.load_batch_train(batch_size)
-			input = torch.tensor(data, dtype=torch.float32, device=device)
+			input_ = torch.tensor(data, dtype=torch.float32, device=device)
 			optimizer.zero_grad()
-			output = model.forward(input)
-			loss_func = torch.mean((output - input) ** 2)
+			output = model.forward(input_)
+			loss_func = torch.mean((output - input_) ** 2)
 			loss += loss_func.item()
 			loss_func.backward()
 			optimizer.step()
 			if j == (iterations-1) and (epoch%50==0 or epoch== epochs-1):
-				x1 = output[0][0].view(1,64,64)
-				x1 = x1.permute(1, 2, 0)
-				x1 = x1.cpu()
-				x1 = x1.detach().numpy()
-				plt.figure(epoch)
-				plt.clf()
-				plt.title('output')
-				plt.imshow(x1, cmap="gray")
-				#plt.pause(1)
-				#plt.draw()
-				plt.savefig("endofepoch" + str(epoch) +".png")
-		loss_epoch.append(loss)
-	return loss_epoch
+				filename = "endofepoch" + str(epoch) +".png"
+				plot_utils.save_frame(output, filename)
+		print("epoch loss: " + str(loss))
 
-training_loss = fit(model,data_loader)
-print(training_loss)
-#time.sleep(10)
+
+def test(model, dataloader):
+	
+	model.eval()
+	with torch.no_grad():
+		for i in range (int(test_samples/batch_size)): 
+			loss = 0.0
+			test_data = dataloader.load_batch_test(batch_size)
+			input_ = torch.tensor(test_data, dtype=torch.float32, device=device)
+			output = model.forward(input_)
+			loss = torch.mean((output - input_) ** 2).item()
+			#TODO evaluation, maybe psnr
+			plot_utils.save_sequences(input_, 0, output, "test_sequence0" + str(i) +".png")
+			#plot_utils.save_sequences(input_, 1, output, "test_sequence1" + str(i) +".png")
+			plot_utils.save_sequences(input_, batch_size -1 , output, "test_sequence64" + str(i) +".png")
+			print ("test loss: " + str(loss))
+
+fit(model,data_loader)
+
+test(model, data_loader)
+
+
 '''
 
 
