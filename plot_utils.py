@@ -3,9 +3,9 @@ import torch
 import torch.nn as nn
 import torchvision
 
+width = 16 #output[0][0].shape[0]
+height = 16 #output[0][0].shape[1]
 def save_frame(output, filename):
-    width = 16 #output[0][0].shape[0]
-    height = 16 #output[0][0].shape[1]
     x1 = output[0][0].view(1, width, height)
     x1 = x1.permute(1, 2, 0)
     x1 = x1.cpu()
@@ -18,10 +18,10 @@ def save_frame(output, filename):
     #plt.pause(1)
     #plt.draw()
     plt.savefig(filename)
+    plt.close()
 
 def save_sequences(data, video, output, filename):
-    width = 16#data[0][video].shape[0]
-    height = 16 #data[0][video].shape[1]
+    
     figure = plt.figure(figsize=(7, 7))
     figure.add_subplot(2, 4, 1)
     frame0 = data[0][[video]].view(1, width, height)
@@ -30,7 +30,6 @@ def save_sequences(data, video, output, filename):
     frame0 = frame0.detach().numpy()
     plt.axis("off")
     plt.imshow(frame0, cmap="gray")
-    #plt.title("first")
     figure.add_subplot(2, 4, 2)
     frame1 = data[5][video].view(1,width,height)
     frame1 = frame1.permute(1, 2, 0)
