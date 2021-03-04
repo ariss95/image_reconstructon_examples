@@ -6,6 +6,7 @@ from torch.utils.data import DataLoader
 from torchvision.utils import save_image
 import torch_encoder
 import matplotlib.pyplot as plt
+import os
 
 batch_size = 64
 epochs = 40
@@ -42,6 +43,9 @@ val_loader = DataLoader(
 model = torch_encoder.Encoder().to(device)
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 criterion = nn.MSELoss(reduction="sum")
+if not os.path.exists("../outputs"):
+	os.makedirs("../outputs")
+
 
 def fit(model, dataloader):
     model.train()

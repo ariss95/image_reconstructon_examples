@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import plot_utils
 import torch
 
+
+# this class is used for loading the dataset from the .npy file
 class Moving_MNIST_Loader:
     def __init__(self, path, time_steps, flatten=True):
         
@@ -25,10 +27,11 @@ class Moving_MNIST_Loader:
         self.testing_index = 0
 
         print("loading of moving MNIST completed")
-
+    
     def shuffle(self):
         indices = np.random.permutation(self.train_set_size)
         self.train = self.train[:, indices, ...]
+    
     def get_batch(self, set, batch_size):
         if set=="train":
             if self.train_index + batch_size -1>= self.train_set_size:

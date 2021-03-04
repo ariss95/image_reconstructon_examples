@@ -6,7 +6,7 @@ import torchvision
 import matplotlib.pyplot as plt
 import plot_utils
 from math import sqrt
-path = '/home/aris/Desktop/anomaly_detection/movingMnist/mnist_test_seq_16.npy'
+path = '/movingMnist/mnist_test_seq_16.npy'
 time_steps = 20
 data_loader = dl.Moving_MNIST_Loader(path=path, time_steps=time_steps, flatten=True)
 device = torch.device('cpu')
@@ -39,6 +39,7 @@ def fit(model, dataloader):
 			loss_func.backward()
 			optimizer.step()
 			if j == (iterations-1) and (epoch%50==0 or epoch == epochs-1):
+				# !!!!! comment out this lines if you dont want to save frames
 				filename = "endofepoch" + str(epoch) +".png"
 				plot_utils.save_frame(output, filename)
 		print("epoch loss: " + str(loss))
@@ -61,6 +62,7 @@ def test(model, dataloader):
 			for frame in range(time_steps):
 				for j in range (batch_size):
 					testing_psnr.append(compute_psnr(input_[frame][j], output[frame][j]))
+			# !!!!! comment out this lines if you dont want to save frames
 			plot_utils.save_sequences(input_, 0, output, "test_sequence0" + str(i) +".png")
 			#plot_utils.save_sequences(input_, 1, output, "test_sequence1" + str(i) +".png")
 			plot_utils.save_sequences(input_, batch_size -1 , output, "test_sequence64" + str(i) +".png")
@@ -80,6 +82,7 @@ plt.plot(training_loss)
 plt.ylabel("epoch loss")
 plt.xlabel("epoch")
 plt.draw()
+# !!!!! comment out this lines if you dont want to save frames
 plt.savefig("training_loss.png")
 plt.close()
 
