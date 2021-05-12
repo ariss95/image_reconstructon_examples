@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import plot_utils
 from math import sqrt
 path = 'movingMnist/mnist_test_seq.npy'
-time_steps = 200
+time_steps = 20
 data_loader = dl.Moving_MNIST_Loader(path,time_steps, 0.8)
 device = torch.device('cpu')
 model = model_RNN.first_RNN(256).to(device)
