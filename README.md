@@ -20,7 +20,6 @@ dataset: [moving MNIST](https://www.cs.toronto.edu/~nitish/unsupervised_video/)
 This script contains a class for easy loading of data from the moving MNIST dataset.
 
 The dataset is splitted in training-validation and testing subsets.
-
 The training set is being shuffled after loading all data from it.
 
 
