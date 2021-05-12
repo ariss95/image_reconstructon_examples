@@ -3,8 +3,8 @@ import torch
 import torch.nn as nn
 import torchvision
 
-width = 16 #output[0][0].shape[0]
-height = 16 #output[0][0].shape[1]
+width = 64 #output[0][0].shape[0]
+height = 64 #output[0][0].shape[1]
 def save_frame(output, filename):
     x1 = output[0][0].view(1, width, height)
     x1 = x1.permute(1, 2, 0)
