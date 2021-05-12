@@ -6,7 +6,7 @@ import torch
 
 # this class is used for loading the dataset from the .npy file
 class Moving_MNIST_Loader:
-    def __init__(self, path, time_steps, flatten=True):
+    def __init__(self, path, time_steps, training_percentage):
         
         self.data = np.load(path).astype('float32')
         
@@ -14,10 +14,9 @@ class Moving_MNIST_Loader:
             self.data = self.data[:time_steps]
         self.num_frames, self.num_samples, self.size = self.data.shape[0], self.data.shape[1], self.data.shape[2:]
 
-        if flatten:
-            self.data = self.data.reshape([self.num_frames, self.num_samples, -1])
+        self.data = self.data.reshape([self.num_frames, self.num_samples, -1])
 
-        self.train_set_size = int(self.num_samples * 0.8)
+        self.train_set_size = int(self.num_samples * training_percentage)
         self.validation_size = self.train_set_size + int(self.num_samples * 0.1)
         self.train = self.data[:, :self.train_set_size, ...]
         self.validate = self.data[:, self.train_set_size: self.validation_size, ...]
